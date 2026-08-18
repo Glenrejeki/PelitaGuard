@@ -8,8 +8,8 @@ class LLMClient:
         self.model = settings.GROQ_MODEL
 
     async def generate_completion(self, prompt: str) -> str:
-        if not self.api_key:
-            return "[Error: Groq API Key not found]"
+        if not self.api_key or "YOUR_GROQ" in self.api_key:
+            return "[Error: Groq API Key belum dikonfigurasi di .env]"
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -19,10 +19,8 @@ class LLMClient:
         payload = {
             "model": self.model,
             "messages": [
-                {
-                    "role": "user",
-                    "content": prompt
-                }
+                {"role": "system", "content": "Anda adalah asisten pelaporan anonim."},
+                {"role": "user", "content": prompt}
             ],
             "temperature": 0.1
         }
@@ -35,11 +33,13 @@ class LLMClient:
                     json=payload,
                     timeout=30.0
                 )
+                if response.status_code == 401:
+                    return f"[Error: Groq API Key Tidak Valid (401). Cek .env Anda]"
+
                 response.raise_for_status()
                 result = response.json()
                 return result["choices"][0]["message"]["content"]
         except Exception as e:
-            print(f"Error calling Groq API: {e}")
             return f"[Error in sanitization: {str(e)}]"
 
 llm_client = LLMClient()
