@@ -1,8 +1,5 @@
 # PelitaGuard — Project Structure & Build Instructions
 
-> File ini dibuat untuk dikirim ke AI code editor (Cursor, Windsurf, Claude Code, dll) sebagai panduan utama (System Rules) selama proses pembuatan proyek. Letakkan file ini di root folder proyek.
-
----
 
 ## 1. Konteks & Alur Aplikasi
 
